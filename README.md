@@ -11,3 +11,7 @@ The ngModule directive gets around these limitations. It allows you to associate
 For a detailed explaination read the original blog post this directive was derived from:
 
 http://www.simplygoodcode.com/2014/04/angularjs-getting-around-ngapp-limitations-with-ngmodule/
+
+You can also install it using bower: (Thanks to Kyle Kemp)
+
+bower install ng-module
