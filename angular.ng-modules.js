@@ -10,55 +10,74 @@
           NG_MODULE_CLASS_REGEXP = /\sng[:\-]module[s](:\s*([\w\d_]+);?)?\s/;
 
       function append(element) {
-          element && elements.push(element);
+	      if(!element){ 
+		      return;
+	      }
+	      if(~elements.indexOf(element)){
+		      return;
+	      }
+              elements.push(element);
       }
 
-      for(var i = 0; i < names.length; i++) {
-          var name = names[i];
-          names[i] = true;
-          append(document.getElementById(name));
-          name = name.replace(':', '\\:');
-          if (element.querySelectorAll) {
-              var elements2;
-              elements2 = element.querySelectorAll('.' + name);
-              for(var j = 0; j < elements2.length; j++) append(elements2[j]);
-              
-              elements2 = element.querySelectorAll('.' + name + '\\:');
-              for(var j = 0; j < elements2.length; j++) append(elements2[j]);
-              
-              elements2 = element.querySelectorAll('[' + name + ']');
-              for(var j = 0; j < elements2.length; j++) append(elements2[j]);
-          }
+      function discoverElements(){
+	      var i, j, name, elements2;
+	      for(i = 0; i < names.length; i++) {
+		  name = names[i];
+		  append(document.getElementById(name));
+		  name = name.replace(':', '\\:');
+		  if (element.querySelectorAll) {
+		      elements2 = element.querySelectorAll('.' + name);
+		      for(j = 0; j < elements2.length; j++) append(elements2[j]);
+		      
+		      elements2 = element.querySelectorAll('.' + name + '\\:');
+		      for(j = 0; j < elements2.length; j++) append(elements2[j]);
+		      
+		      elements2 = element.querySelectorAll('[' + name + ']');
+		      for(j = 0; j < elements2.length; j++) append(elements2[j]);
+		  }
+	      }
       }
 
-      for(var i = 0; i < elements.length; i++) {
-          var element = elements[i];
+      function findNGModule(element){
+	  var attributes = Array.prototype.slice.call(element.attributes), attr, i;
+	      for (i = 0; i < attributes.length; i++){
+		      attr = attributes[i];
+		      if(~names.indexOf(attr.name)){
+			      return attr.value;
+		      }
+	      }
 
-          var className = ' ' + element.className + ' ';
-          var match = NG_MODULE_CLASS_REGEXP.exec(className);
-          if (match) {
-              moduleElements.push(element);
-              modules.push((match[2] || '').replace(/\s+/g, ','));
-          } else {
-              if(element.attributes) {
-                  for (var attrName in element.attributes) {
-                      if(attrName == "length") continue;
-                      var attr = { name: attrName, value: element.attributes[attrName].nodeValue };
-                      
-                      if (names[attr.name]) {
-                          moduleElements.push(element);
-                          modules.push(attr.value);
+      }
+      function processElements(elements){
+	      var module, i, element, className, match, ret =[];
+              for(i = 0; i < elements.length; i++) {
+                   element = elements[i];
+
+                   className = ' ' + element.className + ' ';
+                   match = NG_MODULE_CLASS_REGEXP.exec(className);
+                  if (match) {
+                      moduleElements.push(element);
+                      modules.push((match[2] || '').replace(/\s+/g, ','));
+
+                  } else {
+                      if(element.attributes) {
+                	      if((module = findNGModule(element))){
+                		      ret.push([element, module]);
+                	      }
                       }
                   }
               }
-          }
+	      return ret;
       }
-      
-      for(var i = 0; i < moduleElements.length; i++) {
-          var moduleElement = moduleElements[i];
-          var module = modules[i].replace(/ /g,'').split(",");
+     discoverElements();
+     bootstrapElements(processElements(elements));
+     function bootstrapElements(items){ 
+      for(var i = 0; i < items.length; i++) {
+          var moduleElement = items[i][0];
+          var module = items[i][1].replace(/ /g,'').split(",");
           angular.bootstrap(moduleElement, module);
       }
+     }
   }
 
   angular.element(document).ready(function() {
