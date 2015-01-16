@@ -15,7 +15,6 @@
 
       for(var i = 0; i < names.length; i++) {
           var name = names[i];
-          names[i] = true;
           append(document.getElementById(name));
           name = name.replace(':', '\\:');
           if (element.querySelectorAll) {
@@ -41,11 +40,10 @@
               modules.push((match[2] || '').replace(/\s+/g, ','));
           } else {
               if(element.attributes) {
-                  for (var attrName in element.attributes) {
-                      if(attrName == "length") continue;
-                      var attr = { name: attrName, value: element.attributes[attrName].value };
+                  for(var j = 0; j < element.attributes.length; j++) {
+                      var attr = element.attributes[j];
 
-                      if (names[attr.name]) {
+                      if (names.indexOf(attr.name) != -1) {
                           moduleElements.push(element);
                           modules.push(attr.value);
                       }
@@ -57,18 +55,17 @@
       for(var i = 0; i < moduleElements.length; i++) {
           var moduleElement = moduleElements[i];
           if (typeof(modules[i]) != 'undefined') {
-            var moduleList = modules[i].replace(/ /g,'').split(",");
-            var initializedModuleList = [];
-            for (var j = 0; j < moduleList.length; ++j) {
-
-              try {
-                angular.module(moduleList[j]);
-                initializedModuleList.push(moduleList[j]);
-              } catch (e) {
-                console.error(e);
+              var moduleList = modules[i].replace(/ /g,'').split(",");
+              var initializedModuleList = [];
+              for (var j = 0; j < moduleList.length; ++j) {
+                  try {
+                      angular.module(moduleList[j]);
+                      initializedModuleList.push(moduleList[j]);
+                  } catch (e) {
+                      console.error(e);
+                  }
               }
-            }
-            angular.bootstrap(moduleElement, initializedModuleList);
+              angular.bootstrap(moduleElement, initializedModuleList);
           }
       }
   }
