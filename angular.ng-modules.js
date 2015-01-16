@@ -1,3 +1,6 @@
+// By Luis Perez 
+// From blog post: http://www.simplygoodcode.com/2014/04/angularjs-getting-around-ngapp-limitations-with-ngmodule/
+
 (function() {
   function initNgModules(element) {
       var elements = [element],
