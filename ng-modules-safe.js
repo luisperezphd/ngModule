@@ -6,7 +6,7 @@
     var elements = [element],
       moduleElements = [],
       modules = [],
-      names = ['ng:module', 'ng-module', 'x-ng-module', 'data-ng-module', 'ng:modules', 'ng-modules', 'x-ng-modules', 'data-ng-modules'],
+      names = ['ng-module', 'data-ng-module', 'ng-modules', 'data-ng-modules'],
       NG_MODULE_CLASS_REGEXP = /\sng[:\-]module[s](:\s*([\w\d_]+);?)?\s/;
 
     function append(element) {
