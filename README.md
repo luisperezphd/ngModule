@@ -1,7 +1,7 @@
 ngModule
 ========
 
-As you AngularJS application gets more complex you will likely come to discover that the ngApp directive has two fairly big limitations:
+As your AngularJS application gets more complex you will likely come to discover that the ngApp directive has two fairly big limitations:
 
 1. You can only have one ngApp per page.
 2. You can only associate a single module with a single HTML element
