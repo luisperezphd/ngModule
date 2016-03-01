@@ -12,6 +12,8 @@ For a detailed explaination read the original blog post this directive was deriv
 
 http://www.simplygoodcode.com/2014/04/angularjs-getting-around-ngapp-limitations-with-ngmodule/
 
-You can also install it using bower: (Thanks to Kyle Kemp)
-
-bower install ng-module
+#### Bower 
+```
+$ bower install ng-module
+```
+(Thanks to Kyle Kemp for that)
